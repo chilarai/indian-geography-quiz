@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "indian-geography-quiz",
+    "slug": "indian-geography-quiz",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "indian-geography-quiz"
+}
