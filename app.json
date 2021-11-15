@@ -5,7 +5,12 @@
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "android": {
+      "package": "com.indiangeographyquiz",
+      "googleServicesFile": "./google-services.json"
+    },
+    "description": ""
   },
   "name": "indian-geography-quiz"
 }
