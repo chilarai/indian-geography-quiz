@@ -4,7 +4,7 @@ import { View, StyleSheet, Text, Image, Button } from "react-native";
 
 class Landing extends React.Component {
     navigateToMobile = () => {
-        this.props.navigation.navigate("Mobile");
+        this.props.navigation.navigate("Login");
     };
     render() {
         return (
@@ -14,7 +14,7 @@ class Landing extends React.Component {
                     source={require("../assets/images/igq.png")}
                 />
                 <Button
-                    title="Solid Button"
+                    title="Proceed"
                     size={15}
                     onPress={() => this.navigateToMobile()}
                 />

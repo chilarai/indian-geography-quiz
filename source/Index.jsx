@@ -1,15 +1,15 @@
 import "react-native-gesture-handler";
 import React from "react";
+
 import { StyleSheet, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Landing from "./Landing";
-import Mobile from "./Mobile";
-import Otp from "./Otp";
-import PlayerName from "./PlayerName";
+import Login from "./Login";
 import LeaderBoard from "./LeaderBoard";
-import QuizSelector from "./QuizSelector";
+import Categories from "./Categories";
 import QuizScreen from "./QuizScreen";
+import SubCategories from "./SubCategories";
 import Logout from "./Logout";
 
 const Stack = createStackNavigator();
@@ -20,13 +20,12 @@ class Index extends React.Component {
             <NavigationContainer style={styles.container}>
                 <Stack.Navigator>
                     <Stack.Screen name="Home" component={Landing} />
-                    <Stack.Screen name="Mobile" component={Mobile} />
-                    <Stack.Screen name="ConfirmOtp" component={Otp} />
-                    <Stack.Screen name="PlayerName" component={PlayerName} />
+                    <Stack.Screen name="Login" component={Login} />
                     <Stack.Screen name="LeaderBoard" component={LeaderBoard} />
+                    <Stack.Screen name="Categories" component={Categories} />
                     <Stack.Screen
-                        name="QuizSelector"
-                        component={QuizSelector}
+                        name="SubCategories"
+                        component={SubCategories}
                     />
                     <Stack.Screen name="QuizScreen" component={QuizScreen} />
                     <Stack.Screen name="Logout" component={Logout} />

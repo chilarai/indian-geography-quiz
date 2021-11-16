@@ -7,10 +7,12 @@
     "start": "react-native start"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.15.11",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/core": "^6.1.0",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/stack": "^6.0.11",
+    "axios": "^0.24.0",
     "expo": "~43.0.2",
     "expo-splash-screen": "~0.13.5",
     "expo-status-bar": "~1.1.0",
@@ -19,6 +21,7 @@
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
     "react-native-elements": "^3.4.2",
+    "react-native-flexbox-grid": "^0.3.2",
     "react-native-gesture-handler": "~1.10.2",
     "react-native-reanimated": "~2.2.0",
     "react-native-safe-area-context": "^3.3.2",
