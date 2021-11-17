@@ -1,11 +1,13 @@
 import React from "react";
-import { View, StyleSheet, Text, Image, Button } from "react-native";
-// import { Button } from "react-native-elements";
+import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { Header, Icon, Text } from "react-native-elements";
 
 class Landing extends React.Component {
-    navigateToMobile = () => {
-        this.props.navigation.navigate("Login");
+    navigateToCategories = () => {
+        console.log(this.props);
+        this.props.navigation.navigate("Categories");
     };
+
     render() {
         return (
             <View style={styles.container}>
@@ -13,11 +15,15 @@ class Landing extends React.Component {
                     style={styles.logo}
                     source={require("../assets/images/igq.png")}
                 />
-                <Button
-                    title="Proceed"
-                    size={15}
-                    onPress={() => this.navigateToMobile()}
-                />
+
+                {/* <Divider style={styles.dividerStyle} /> */}
+                <Text style={styles.info}>Sign in to continue</Text>
+                <TouchableOpacity onPress={() => this.navigateToCategories()}>
+                    <Image
+                        style={styles.google}
+                        source={require("../assets/google/btn_google_signin_dark_normal_web.png")}
+                    />
+                </TouchableOpacity>
             </View>
         );
     }
@@ -29,13 +35,33 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: "column",
     },
+
     title: {
         fontSize: 30,
         fontWeight: "bold",
         color: "white",
     },
+
+    dividerStyle: {
+        marginTop: 150,
+    },
+
+    info: {
+        marginTop: 170,
+        alignSelf: "center",
+    },
+
+    google: {
+        marginTop: 10,
+        width: 191,
+        height: 46,
+        alignSelf: "center",
+    },
+
     logo: {
-        width: 580,
-        height: 258,
+        height: 111,
+        width: 250,
+        alignSelf: "center",
+        marginTop: 100,
     },
 });

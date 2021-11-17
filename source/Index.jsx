@@ -5,7 +5,6 @@ import { StyleSheet, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Landing from "./Landing";
-import Login from "./Login";
 import LeaderBoard from "./LeaderBoard";
 import Categories from "./Categories";
 import QuizScreen from "./QuizScreen";
@@ -20,7 +19,6 @@ class Index extends React.Component {
             <NavigationContainer style={styles.container}>
                 <Stack.Navigator>
                     <Stack.Screen name="Home" component={Landing} />
-                    <Stack.Screen name="Login" component={Login} />
                     <Stack.Screen name="LeaderBoard" component={LeaderBoard} />
                     <Stack.Screen name="Categories" component={Categories} />
                     <Stack.Screen

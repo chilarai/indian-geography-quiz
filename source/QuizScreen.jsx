@@ -1,5 +1,6 @@
 import React from "react";
 import API from "./subcomponents/API";
+import Head from "./subcomponents/HeaderComponent";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Column as Col, Row } from "react-native-flexbox-grid";
@@ -160,6 +161,7 @@ class QuizScreen extends React.Component {
 
         return (
             <View>
+                <Head navigation={this.props.navigation} />
                 <Image source={this.state.currentImage} />
                 <View>{rows}</View>
 

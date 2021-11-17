@@ -1,5 +1,6 @@
 import React from "react";
 import API from "./subcomponents/API";
+import Head from "./subcomponents/HeaderComponent";
 import { ListItem } from "react-native-elements";
 import { View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -41,6 +42,7 @@ class Categories extends React.Component {
     render() {
         return (
             <View>
+                <Head navigation={this.props.navigation} />
                 {this.state.categories.map((value, key) => (
                     <ListItem
                         key={key}
