@@ -1,7 +1,7 @@
 import React from "react";
 import API from "./subcomponents/API";
 import Head from "./subcomponents/HeaderComponent";
-import { ListItem } from "react-native-elements";
+import { Card, Button, Icon, Text } from "react-native-elements";
 import { View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -42,21 +42,30 @@ class Categories extends React.Component {
     render() {
         return (
             <View>
-                <Head navigation={this.props.navigation} />
+                <Head navigation={this.props.navigation} newScore={-2} />
                 {this.state.categories.map((value, key) => (
-                    <ListItem
-                        key={key}
-                        bottomDivider
-                        onPress={() =>
-                            this.navigateToSubCategories(value.CategoryID)
-                        }
-                    >
-                        <ListItem.Content>
-                            <ListItem.Title>
-                                {value.CategoryName}
-                            </ListItem.Title>
-                        </ListItem.Content>
-                    </ListItem>
+                    <Card key={key}>
+                        <Card.Title>{value.CategoryName}</Card.Title>
+                        <Card.Divider />
+                        <Card.Image source={require("../assets/test/1.png")} />
+                        <Text style={{ marginBottom: 10 }}>
+                            {
+                                "India has 748 districts spread across 28 states and 8 union territories. Can you point them all?"
+                            }
+                        </Text>
+                        <Button
+                            buttonStyle={{
+                                borderRadius: 0,
+                                marginLeft: 0,
+                                marginRight: 0,
+                                marginBottom: 0,
+                            }}
+                            title="Proceed"
+                            onPress={() =>
+                                this.navigateToSubCategories(value.CategoryID)
+                            }
+                        />
+                    </Card>
                 ))}
             </View>
         );

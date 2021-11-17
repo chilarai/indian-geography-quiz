@@ -1,12 +1,12 @@
 import React from "react";
 import API from "./subcomponents/API";
 import Head from "./subcomponents/HeaderComponent";
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Column as Col, Row } from "react-native-flexbox-grid";
 
 import * as Constants from "./subcomponents/Constants";
-import { Button, Chip } from "react-native-elements";
+import { Button, Chip, Card, Divider, Image } from "react-native-elements";
 
 class QuizScreen extends React.Component {
     state = {
@@ -23,6 +23,8 @@ class QuizScreen extends React.Component {
         icon: "",
         showSkip: true,
         showMessage: false,
+
+        updatedScore: 0,
     };
 
     componentDidMount = async () => {
@@ -89,6 +91,9 @@ class QuizScreen extends React.Component {
             };
 
             await API.post("/updatescore", options);
+
+            var updatedScore = this.state.updatedScore + 1;
+            this.setState({ updatedScore });
         } else {
             this.setState({
                 message:
@@ -103,7 +108,7 @@ class QuizScreen extends React.Component {
 
         setTimeout(() => {
             this.nextQuiz();
-        }, 3000);
+        }, 1000);
     };
 
     nextQuiz = () => {
@@ -131,7 +136,7 @@ class QuizScreen extends React.Component {
         for (let i = 0; i < this.state.totalRows; i++) {
             rows.push(
                 <Row size={12} key={i}>
-                    <Col sm={6} md={6} lg={6}>
+                    <Col sm={6} md={6} lg={6} style={styles.option}>
                         <Button
                             title={this.state.currentOptions[i * 2]}
                             type="outline"
@@ -143,7 +148,7 @@ class QuizScreen extends React.Component {
                             disabled={this.state.showMessage}
                         ></Button>
                     </Col>
-                    <Col sm={6} md={6} lg={6}>
+                    <Col sm={6} md={6} lg={6} style={styles.option}>
                         <Button
                             title={this.state.currentOptions[i * 2 + 1]}
                             type="outline"
@@ -161,36 +166,72 @@ class QuizScreen extends React.Component {
 
         return (
             <View>
-                <Head navigation={this.props.navigation} />
-                <Image source={this.state.currentImage} />
-                <View>{rows}</View>
+                <Head
+                    navigation={this.props.navigation}
+                    newScore={this.state.updatedScore}
+                />
+                <Card>
+                    <Card.Title>Identify the district</Card.Title>
+                    <Card.Divider />
+                    {/* <Image source={this.state.currentImage} /> */}
+                    <Card.Image source={require("../assets/test/1.png")} />
 
-                {this.state.showSkip ? (
-                    <Button
-                        title="Skip"
-                        type="solid"
-                        onPress={() => this.skipQuiz()}
-                    />
-                ) : (
-                    ""
-                )}
+                    <Divider style={styles.divider} />
+                    <View style={styles.rows}>{rows}</View>
 
-                {this.state.showMessage ? (
-                    <Chip
-                        title={this.state.message}
-                        icon={{
-                            name: this.state.icon,
-                            type: "font-awesome",
-                            size: 20,
-                            color: "white",
-                        }}
-                    />
-                ) : (
-                    ""
-                )}
+                    <View style={styles.skip}>
+                        {this.state.showSkip ? (
+                            <Button
+                                title="Skip"
+                                type="solid"
+                                onPress={() => this.skipQuiz()}
+                            />
+                        ) : (
+                            <View />
+                        )}
+                    </View>
+
+                    <View style={styles.message}>
+                        {this.state.showMessage ? (
+                            <Chip
+                                title={this.state.message}
+                                icon={{
+                                    name: this.state.icon,
+                                    type: "font-awesome",
+                                    size: 20,
+                                    color: "white",
+                                }}
+                            />
+                        ) : (
+                            <View />
+                        )}
+                    </View>
+                </Card>
             </View>
         );
     }
 }
 
 export default QuizScreen;
+
+const styles = StyleSheet.create({
+    divider: {
+        marginTop: 10,
+    },
+    map: {
+        height: 100,
+        width: 100,
+    },
+    rows: {
+        marginTop: 10,
+    },
+    skip: {
+        marginTop: 10,
+    },
+    message: {
+        marginTop: 10,
+    },
+    option: {
+        padding: 5,
+    },
+});

@@ -1,7 +1,7 @@
 import React from "react";
 import API from "./subcomponents/API";
 import Head from "./subcomponents/HeaderComponent";
-import { ListItem } from "react-native-elements";
+import { ListItem, Card } from "react-native-elements";
 import { View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -64,20 +64,26 @@ class SubCategories extends React.Component {
     render() {
         return (
             <View>
-                <Head navigation={this.props.navigation} />
-                {this.state.subCategories.map((value, key) => (
-                    <ListItem
-                        key={key}
-                        bottomDivider
-                        onPress={() => this.navigateToQuiz(value.SubCategoryID)}
-                    >
-                        <ListItem.Content>
-                            <ListItem.Title>
-                                {value.SubCategoryName}
-                            </ListItem.Title>
-                        </ListItem.Content>
-                    </ListItem>
-                ))}
+                <Head navigation={this.props.navigation} newScore={-2} />
+                <Card>
+                    <Card.Title>Select a state</Card.Title>
+                    <Card.Divider />
+                    {this.state.subCategories.map((value, key) => (
+                        <ListItem
+                            key={key}
+                            bottomDivider
+                            onPress={() =>
+                                this.navigateToQuiz(value.SubCategoryID)
+                            }
+                        >
+                            <ListItem.Content>
+                                <ListItem.Title>
+                                    {value.SubCategoryName}
+                                </ListItem.Title>
+                            </ListItem.Content>
+                        </ListItem>
+                    ))}
+                </Card>
             </View>
         );
     }

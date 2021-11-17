@@ -1,10 +1,9 @@
 import React from "react";
 import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
-import { Header, Icon, Text } from "react-native-elements";
+import { Text } from "react-native-elements";
 
 class Landing extends React.Component {
     navigateToCategories = () => {
-        console.log(this.props);
         this.props.navigation.navigate("Categories");
     };
 
