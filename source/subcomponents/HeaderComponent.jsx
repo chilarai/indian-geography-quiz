@@ -1,6 +1,6 @@
 import React from "react";
 import { View } from "react-native";
-import { Header, Icon, Text } from "react-native-elements";
+import { Header, Icon, Badge } from "react-native-elements";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import API from "./API";
@@ -71,6 +71,12 @@ class Head extends React.Component {
         return (
             <View>
                 <Header
+                    placement="right"
+                    containerStyle={{
+                        height: 80,
+                    }}
+                    statusBarProps={{ barStyle: "light-content" }}
+                    barStyle="light-content" // or directly
                     leftComponent={
                         <Icon
                             name="home"
@@ -80,9 +86,7 @@ class Head extends React.Component {
                         />
                     }
                     centerComponent={
-                        <Text h4 style={{ color: "white" }}>
-                            My Score: {this.state.score}
-                        </Text>
+                        <Badge value={this.state.score} status="warning" />
                     }
                     rightComponent={
                         <Icon

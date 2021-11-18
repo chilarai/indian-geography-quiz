@@ -18,15 +18,48 @@ class Index extends React.Component {
         return (
             <NavigationContainer style={styles.container}>
                 <Stack.Navigator>
-                    <Stack.Screen name="Home" component={Landing} />
-                    <Stack.Screen name="LeaderBoard" component={LeaderBoard} />
-                    <Stack.Screen name="Categories" component={Categories} />
+                    <Stack.Screen
+                        name="Home"
+                        component={Landing}
+                        options={{
+                            headerShown: false,
+                        }}
+                    />
+                    <Stack.Screen
+                        name="LeaderBoard"
+                        component={LeaderBoard}
+                        options={{
+                            headerShown: false,
+                        }}
+                    />
+                    <Stack.Screen
+                        name="Categories"
+                        component={Categories}
+                        options={{
+                            headerShown: false,
+                        }}
+                    />
                     <Stack.Screen
                         name="SubCategories"
                         component={SubCategories}
+                        options={{
+                            headerShown: false,
+                        }}
                     />
-                    <Stack.Screen name="QuizScreen" component={QuizScreen} />
-                    <Stack.Screen name="Logout" component={Logout} />
+                    <Stack.Screen
+                        name="QuizScreen"
+                        component={QuizScreen}
+                        options={{
+                            headerShown: false,
+                        }}
+                    />
+                    <Stack.Screen
+                        name="Logout"
+                        component={Logout}
+                        options={{
+                            headerShown: false,
+                        }}
+                    />
                 </Stack.Navigator>
             </NavigationContainer>
         );

@@ -20,7 +20,7 @@ class Landing extends React.Component {
                 <TouchableOpacity onPress={() => this.navigateToCategories()}>
                     <Image
                         style={styles.google}
-                        source={require("../assets/google/btn_google_signin_dark_normal_web.png")}
+                        source={require("../assets/images/google.png")}
                     />
                 </TouchableOpacity>
             </View>
@@ -46,20 +46,21 @@ const styles = StyleSheet.create({
     },
 
     info: {
-        marginTop: 170,
+        marginTop: 100,
         alignSelf: "center",
+        fontSize: 18,
     },
 
     google: {
         marginTop: 10,
-        width: 191,
-        height: 46,
+        width: 250,
+        height: 60,
         alignSelf: "center",
     },
 
     logo: {
-        height: 111,
-        width: 250,
+        height: 250,
+        width: 350,
         alignSelf: "center",
         marginTop: 100,
     },

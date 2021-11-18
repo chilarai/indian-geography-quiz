@@ -2,7 +2,7 @@ import React from "react";
 import API from "./subcomponents/API";
 import Head from "./subcomponents/HeaderComponent";
 import { Card, Button, Icon, Text } from "react-native-elements";
-import { View } from "react-native";
+import { View, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import * as Constants from "./subcomponents/Constants";
@@ -41,7 +41,7 @@ class Categories extends React.Component {
 
     render() {
         return (
-            <View>
+            <View style={styles.container}>
                 <Head navigation={this.props.navigation} newScore={-2} />
                 {this.state.categories.map((value, key) => (
                     <Card key={key}>
@@ -73,3 +73,9 @@ class Categories extends React.Component {
 }
 
 export default Categories;
+
+const styles = StyleSheet.create({
+    container: {
+        flexDirection: "column",
+    },
+});
