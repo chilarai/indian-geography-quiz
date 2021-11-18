@@ -60,7 +60,7 @@ class Categories extends React.Component {
                                 marginRight: 0,
                                 marginBottom: 0,
                             }}
-                            title="Proceed"
+                            title="Start Quiz"
                             onPress={() =>
                                 this.navigateToSubCategories(value.CategoryID)
                             }
