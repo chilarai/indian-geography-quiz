@@ -1,12 +1,11 @@
 import React from "react";
 import API from "./subcomponents/API";
 import Head from "./subcomponents/HeaderComponent";
-import { View, StyleSheet, Text } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { View, StyleSheet } from "react-native";
 import { Column as Col, Row } from "react-native-flexbox-grid";
 
 import * as Constants from "./subcomponents/Constants";
-import { Button, Chip, Card, Divider, Image } from "react-native-elements";
+import { Button, Chip, Card, Divider } from "react-native-elements";
 
 class QuizScreen extends React.Component {
     state = {
@@ -25,11 +24,14 @@ class QuizScreen extends React.Component {
         showMessage: false,
 
         updatedScore: 0,
+        sessionKey: "",
+        userID: 0,
+        categoryID: 0,
     };
 
     componentDidMount = async () => {
         try {
-            const quizzes = await AsyncStorage.getItem("@quizzes");
+            const quizzes = this.props.route.params.quizzes;
             var currentQuiz = JSON.parse(quizzes);
 
             var counter = this.state.counter;
@@ -46,10 +48,21 @@ class QuizScreen extends React.Component {
                 currentOptions: currentQuiz[counter].Options,
                 currentImage: currentQuiz[counter].ImageLink,
                 totalQuizzes: currentQuiz.length,
+                sessionKey: this.props.route.params.sessionKey,
+                userID: this.props.route.params.userID,
+                categoryID: this.props.route.params.categoryID,
             });
         } catch (e) {
             console.log("Error Quiz", e);
         }
+    };
+
+    navigateToSubCategories = () => {
+        this.props.navigation.navigate("SubCategories", {
+            categoryID: this.state.categoryID,
+            sessionKey: this.state.sessionKey,
+            userID: this.state.userID,
+        });
     };
 
     skipQuiz = () => {
@@ -57,6 +70,11 @@ class QuizScreen extends React.Component {
         counter++;
 
         var currentQuiz = this.state.currentQuiz;
+
+        // navigate to sub categories if quizzes are over
+        if (counter === this.state.totalQuizzes) {
+            this.navigateToSubCategories();
+        }
 
         if (counter < this.state.totalQuizzes) {
             this.setState({
@@ -82,12 +100,12 @@ class QuizScreen extends React.Component {
                 showSkip: false,
             });
 
-            const categoryID = await AsyncStorage.getItem("@categoryID");
+            const categoryID = this.props.route.params.categoryID;
 
             var options = {
-                SessionKey: Constants.SESSIONKEY,
+                SessionKey: this.state.sessionKey,
                 CategoryID: parseInt(categoryID),
-                UserID: Constants.USERID,
+                UserID: this.state.userID,
             };
 
             await API.post("/updatescore", options);
@@ -116,6 +134,11 @@ class QuizScreen extends React.Component {
         counter++;
 
         var currentQuiz = this.state.currentQuiz;
+
+        // navigate to sub categories if quizzes are over
+        if (counter === this.state.totalQuizzes) {
+            this.navigateToSubCategories();
+        }
 
         if (counter < this.state.totalQuizzes) {
             this.setState({
@@ -169,6 +192,8 @@ class QuizScreen extends React.Component {
                 <Head
                     navigation={this.props.navigation}
                     newScore={this.state.updatedScore}
+                    sessionKey={this.props.route.params.sessionKey}
+                    userID={this.props.route.params.userID}
                 />
                 <Card>
                     <Card.Title>Identify the district</Card.Title>
@@ -207,6 +232,16 @@ class QuizScreen extends React.Component {
                         )}
                     </View>
                 </Card>
+
+                {this.state.totalQuizzes === this.state.counter + 1 ? (
+                    <Button
+                        title="Play new quiz"
+                        type="solid"
+                        onPress={() => this.navigateToSubCategories()}
+                    />
+                ) : (
+                    <View />
+                )}
             </View>
         );
     }

@@ -3,25 +3,39 @@ import API from "./subcomponents/API";
 import Head from "./subcomponents/HeaderComponent";
 import { Card, Button, Icon, Text } from "react-native-elements";
 import { View, StyleSheet } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import * as Constants from "./subcomponents/Constants";
 
 class Categories extends React.Component {
     state = {
         categories: [],
+        sessionKey: "",
+        userID: 0,
+        googleTest: "",
+        googleTest2: "",
     };
 
     componentDidMount = async () => {
         var options = {
-            SessionKey: Constants.SESSIONKEY,
+            SessionKey: this.props.route.params.sessionKey,
         };
+
+        this.setState({
+            googleTest: JSON.stringify(this.props.route.params.user),
+            googleTest2: this.props.route.params.user,
+        });
 
         try {
             const response = await API.post("/categories", options);
 
             if (response.data.status.code === 200) {
-                this.setState({ categories: response.data.data });
+                this.setState({
+                    categories: response.data.data,
+                    sessionKey: this.props.route.params.sessionKey,
+                    userID: this.props.route.params.userID,
+                    googleTest: JSON.stringify(this.props.route.params.user),
+                    googleTest2: this.props.route.params.user,
+                });
             } else {
                 console.log(response.data.status.msg);
             }
@@ -30,10 +44,15 @@ class Categories extends React.Component {
         }
     };
 
+    componentDidUpdate = () => {};
+
     navigateToSubCategories = async (categoryID) => {
         try {
-            await AsyncStorage.setItem("@categoryID", categoryID);
-            this.props.navigation.navigate("SubCategories");
+            this.props.navigation.navigate("SubCategories", {
+                categoryID: categoryID,
+                sessionKey: this.state.sessionKey,
+                userID: this.state.userID,
+            });
         } catch (e) {
             console.log("Error", e);
         }
@@ -42,7 +61,12 @@ class Categories extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Head navigation={this.props.navigation} newScore={-2} />
+                <Head
+                    navigation={this.props.navigation}
+                    newScore={-2}
+                    sessionKey={this.props.route.params.sessionKey}
+                    userID={this.props.route.params.userID}
+                />
                 {this.state.categories.map((value, key) => (
                     <Card key={key}>
                         <Card.Title>{value.CategoryName}</Card.Title>
@@ -67,6 +91,8 @@ class Categories extends React.Component {
                         />
                     </Card>
                 ))}
+                <Text>{(this.state.googleTest, "T1")} </Text>
+                <Text>{(this.state.googleTest2, "T2")} </Text>
             </View>
         );
     }

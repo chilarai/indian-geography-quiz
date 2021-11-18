@@ -3,7 +3,6 @@ import API from "./subcomponents/API";
 import Head from "./subcomponents/HeaderComponent";
 import { ListItem, Card } from "react-native-elements";
 import { View } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import * as Constants from "./subcomponents/Constants";
 
@@ -11,14 +10,16 @@ class SubCategories extends React.Component {
     state = {
         categoryID: 0,
         subCategories: [],
+        sessionKey: "",
+        userID: 0,
     };
 
     componentDidMount = async () => {
         try {
-            const categoryID = await AsyncStorage.getItem("@categoryID");
+            const categoryID = this.props.route.params.categoryID;
 
             var options = {
-                SessionKey: Constants.SESSIONKEY,
+                SessionKey: this.props.route.params.sessionKey,
                 CategoryID: parseInt(categoryID),
             };
 
@@ -28,6 +29,8 @@ class SubCategories extends React.Component {
                 this.setState({
                     subCategories: response.data.data,
                     categoryID: parseInt(categoryID),
+                    sessionKey: this.props.route.params.sessionKey,
+                    userID: this.props.route.params.userID,
                 });
             } else {
                 console.log(response.data.status.msg);
@@ -40,7 +43,7 @@ class SubCategories extends React.Component {
     navigateToQuiz = async (subCategoryID) => {
         try {
             var options = {
-                SessionKey: Constants.SESSIONKEY,
+                SessionKey: this.state.sessionKey,
                 CategoryID: this.state.categoryID,
                 SubCategoryID: parseInt(subCategoryID),
             };
@@ -49,10 +52,14 @@ class SubCategories extends React.Component {
 
             if (response.data.status.code === 200) {
                 const quizzes = JSON.stringify(response.data.data);
-                await AsyncStorage.setItem("@quizzes", quizzes);
-                await AsyncStorage.setItem("@subCategoryID", subCategoryID);
 
-                this.props.navigation.navigate("QuizScreen");
+                this.props.navigation.navigate("QuizScreen", {
+                    categoryID: this.state.categoryID,
+                    quizzes: quizzes,
+                    subCategoryID: subCategoryID,
+                    sessionKey: this.state.sessionKey,
+                    userID: this.state.userID,
+                });
             } else {
                 console.log(response.data.status.msg);
             }
@@ -64,7 +71,12 @@ class SubCategories extends React.Component {
     render() {
         return (
             <View>
-                <Head navigation={this.props.navigation} newScore={-2} />
+                <Head
+                    navigation={this.props.navigation}
+                    newScore={-2}
+                    sessionKey={this.props.route.params.sessionKey}
+                    userID={this.props.route.params.userID}
+                />
                 <Card>
                     <Card.Title>Select a state</Card.Title>
                     <Card.Divider />

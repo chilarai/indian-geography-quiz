@@ -1,7 +1,6 @@
 import React from "react";
 import { View } from "react-native";
 import { Header, Icon, Badge } from "react-native-elements";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import API from "./API";
 import * as Constants from "./Constants";
@@ -10,6 +9,8 @@ class Head extends React.Component {
     state = {
         score: 0,
         tmpScore: -1,
+        sessionKey: "",
+        userID: 0,
     };
 
     componentDidMount = async () => {
@@ -27,44 +28,51 @@ class Head extends React.Component {
             todayDate.getDate();
 
         var options = {
-            UserID: Constants.USERID,
-            SessionKey: Constants.SESSIONKEY,
+            UserID: this.props.userID,
+            SessionKey: this.props.sessionKey,
             QuizDate: formatTodayDate,
         };
 
         const response = await API.post("/currentscore", options);
 
         if (response.data.status.code === 200) {
-            await AsyncStorage.setItem("@score", response.data.data.Score);
-            this.setState({ score: response.data.data.Score });
+            this.setState({
+                score: response.data.data.Score,
+                sessionKey: this.props.sessionKey,
+                userID: this.props.userID,
+            });
         } else {
             console.log(response.data);
         }
     };
 
     componentDidUpdate = async (props) => {
-        // console.log("COMP DID UPDATE");
         if (
             this.state.tmpScore !== props.newScore &&
             typeof props.newScore !== "undefined"
         ) {
             if (props.newScore > 0) {
                 var score = this.state.score + 1;
-                await AsyncStorage.setItem("@score", score);
                 this.setState({ score, tmpScore: props.newScore });
             } else {
-                var score = await AsyncStorage.getItem("@score");
-                this.setState({ score, tmpScore: props.newScore });
+                // var score = await AsyncStorage.getItem("@score");
+                this.setState({ tmpScore: props.newScore });
             }
         }
     };
 
     navigateToLeaderBoards = () => {
-        this.props.navigation.navigate("LeaderBoard");
+        this.props.navigation.navigate("LeaderBoard", {
+            sessionKey: this.state.sessionKey,
+            userID: this.state.userID,
+        });
     };
 
     navigateToCategories = () => {
-        this.props.navigation.navigate("Categories");
+        this.props.navigation.navigate("Categories", {
+            sessionKey: this.state.sessionKey,
+            userID: this.state.userID,
+        });
     };
 
     render() {

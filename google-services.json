@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "165520655735",
+    "project_id": "indian-geography-quiz-bc927",
+    "storage_bucket": "indian-geography-quiz-bc927.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:165520655735:android:5346f4f88f52b2bc50cd72",
+        "android_client_info": {
+          "package_name": "com.indiangeographyquiz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "165520655735-6j8od9g58o06cbba1rsgigqf5q5d3jlq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.indiangeographyquiz",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "165520655735-0ad97tp49f240okagjo3hcotk6s1rgbp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBU7Du8UD7vrlHNdGcA7Fb1g6VaCV6rsbg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "165520655735-0ad97tp49f240okagjo3hcotk6s1rgbp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

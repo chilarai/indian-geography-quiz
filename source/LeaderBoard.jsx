@@ -3,13 +3,14 @@ import API from "./subcomponents/API";
 import Head from "./subcomponents/HeaderComponent";
 import { View, StyleSheet, Text } from "react-native";
 import { Avatar, ListItem, Card } from "react-native-elements";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import * as Constants from "./subcomponents/Constants";
 
 class LeaderBoard extends React.Component {
     state = {
         leaderboards: [],
+        sessionKey: "",
+        userID: 0,
     };
 
     componentDidMount = async () => {
@@ -27,7 +28,7 @@ class LeaderBoard extends React.Component {
                 "-" +
                 todayDate.getDate();
 
-            const categoryID = await AsyncStorage.getItem("@categoryID");
+            const categoryID = this.props.route.params.categoryID;
 
             var options = {
                 UserID: Constants.USERID,
@@ -39,7 +40,11 @@ class LeaderBoard extends React.Component {
             const response = await API.post("/leaderboard", options);
 
             if (response.data.status.code === 200) {
-                this.setState({ leaderboards: response.data.data });
+                this.setState({
+                    leaderboards: response.data.data,
+                    sessionKey: this.props.route.params.sessionKey,
+                    userID: this.props.route.params.userID,
+                });
             }
         } catch (error) {
             console.log(error);
@@ -49,7 +54,12 @@ class LeaderBoard extends React.Component {
     render() {
         return (
             <View>
-                <Head navigation={this.props.navigation} newScore={-2} />
+                <Head
+                    navigation={this.props.navigation}
+                    newScore={-2}
+                    sessionKey={this.props.route.params.sessionKey}
+                    userID={this.props.route.params.userID}
+                />
                 <Card>
                     <Card.Title>Day's top scorers</Card.Title>
                     <Card.Divider />
