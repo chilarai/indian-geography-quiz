@@ -25,7 +25,6 @@ class Landing extends React.Component {
                 <View style={styles.inputBox}>
                     <Input
                         placeholder="Pick a name"
-                        // leftIcon={{ type: "font-awesome", name: "user" }}
                         inputStyle={{ textAlign: "center" }}
                         onChangeText={(value) =>
                             this.setState({ comment: value })
@@ -71,7 +70,7 @@ const styles = StyleSheet.create({
     },
 
     continueBtn: {
-        marginTop: 10,
+        marginTop: 30,
         alignSelf: "center",
     },
 
