@@ -1,14 +1,40 @@
 import React from "react";
+import API from "./subcomponents/API";
 import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { Text, Input, Button } from "react-native-elements";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import * as Constants from "./subcomponents/Constants";
 class Landing extends React.Component {
-    navigateToCategories = () => {
-        this.props.navigation.navigate("Categories", {
-            userID: Constants.USERID,
-            sessionKey: Constants.SESSIONKEY,
-        });
+    state = {
+        name: "",
+        validName: false,
+        message: "",
+        color: "red",
+    };
+
+    navigateToCategories = async () => {
+        var options = {
+            name: this.state.name,
+        };
+
+        let response = await API.post("/login", options);
+
+        if (response.data.status.code === 200) {
+            await AsyncStorage.setItem("playerName", this.state.name);
+
+            this.props.navigation.navigate("Categories", {
+                userID: response.data.data.userId,
+                sessionKey: response.data.data.sessionKey,
+            });
+        } else {
+            this.setState({
+                validName: false,
+                message: response.data.status.msg,
+                color: "red",
+            });
+            console.log(response.data);
+        }
     };
 
     render() {
@@ -26,11 +52,14 @@ class Landing extends React.Component {
                     <Input
                         placeholder="Pick a name"
                         inputStyle={{ textAlign: "center" }}
-                        onChangeText={(value) =>
-                            this.setState({ comment: value })
-                        }
+                        onChangeText={(value) => this.setState({ name: value })}
                     />
                 </View>
+
+                <Text style={{ color: this.state.color }}>
+                    {this.state.message}
+                </Text>
+
                 <Button
                     style={styles.continueBtn}
                     title="Continue"
@@ -70,8 +99,7 @@ const styles = StyleSheet.create({
     },
 
     continueBtn: {
-        marginTop: 30,
-        alignSelf: "center",
+        marginTop: 20,
     },
 
     logo: {
