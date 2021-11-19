@@ -1,10 +1,14 @@
 import React from "react";
 import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
-import { Text } from "react-native-elements";
+import { Text, Input, Button } from "react-native-elements";
 
+import * as Constants from "./subcomponents/Constants";
 class Landing extends React.Component {
     navigateToCategories = () => {
-        this.props.navigation.navigate("Categories");
+        this.props.navigation.navigate("Categories", {
+            userID: Constants.USERID,
+            sessionKey: Constants.SESSIONKEY,
+        });
     };
 
     render() {
@@ -17,12 +21,23 @@ class Landing extends React.Component {
 
                 {/* <Divider style={styles.dividerStyle} /> */}
                 <Text style={styles.info}>Sign in to continue</Text>
-                <TouchableOpacity onPress={() => this.navigateToCategories()}>
-                    <Image
-                        style={styles.google}
-                        source={require("../assets/images/google.png")}
+
+                <View style={styles.inputBox}>
+                    <Input
+                        placeholder="Pick a name"
+                        // leftIcon={{ type: "font-awesome", name: "user" }}
+                        inputStyle={{ textAlign: "center" }}
+                        onChangeText={(value) =>
+                            this.setState({ comment: value })
+                        }
                     />
-                </TouchableOpacity>
+                </View>
+                <Button
+                    style={styles.continueBtn}
+                    title="Continue"
+                    type="solid"
+                    onPress={() => this.navigateToCategories()}
+                />
             </View>
         );
     }
@@ -41,20 +56,22 @@ const styles = StyleSheet.create({
         color: "white",
     },
 
-    dividerStyle: {
-        marginTop: 150,
+    inputBox: {
+        flex: 1,
+        alignSelf: "center",
+        textAlign: "center",
+        width: 300,
+        marginTop: 30,
     },
 
     info: {
-        marginTop: 100,
+        marginTop: 70,
         alignSelf: "center",
         fontSize: 18,
     },
 
-    google: {
+    continueBtn: {
         marginTop: 10,
-        width: 250,
-        height: 60,
         alignSelf: "center",
     },
 

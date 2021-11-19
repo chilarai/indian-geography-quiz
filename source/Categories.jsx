@@ -11,19 +11,12 @@ class Categories extends React.Component {
         categories: [],
         sessionKey: "",
         userID: 0,
-        googleTest: "",
-        googleTest2: "",
     };
 
     componentDidMount = async () => {
         var options = {
             SessionKey: this.props.route.params.sessionKey,
         };
-
-        this.setState({
-            googleTest: JSON.stringify(this.props.route.params.user),
-            googleTest2: this.props.route.params.user,
-        });
 
         try {
             const response = await API.post("/categories", options);
@@ -33,8 +26,6 @@ class Categories extends React.Component {
                     categories: response.data.data,
                     sessionKey: this.props.route.params.sessionKey,
                     userID: this.props.route.params.userID,
-                    googleTest: JSON.stringify(this.props.route.params.user),
-                    googleTest2: this.props.route.params.user,
                 });
             } else {
                 console.log(response.data.status.msg);
@@ -91,8 +82,6 @@ class Categories extends React.Component {
                         />
                     </Card>
                 ))}
-                <Text>{(this.state.googleTest, "T1")} </Text>
-                <Text>{(this.state.googleTest2, "T2")} </Text>
             </View>
         );
     }
