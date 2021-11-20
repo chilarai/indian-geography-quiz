@@ -31,9 +31,9 @@ class LeaderBoard extends React.Component {
             const categoryID = this.props.route.params.categoryID;
 
             var options = {
-                UserID: Constants.USERID,
+                UserID: this.props.route.params.userID,
                 CategoryID: parseInt(categoryID),
-                SessionKey: Constants.SESSIONKEY,
+                SessionKey: this.props.route.params.sessionKey,
                 QuizDate: formatTodayDate,
             };
 
@@ -68,7 +68,6 @@ class LeaderBoard extends React.Component {
                             <Text>
                                 {key + 1} {"."}
                             </Text>
-                            <Avatar source={require("../assets/test/1.png")} />
                             <ListItem.Content>
                                 <ListItem.Title>{value.Name}</ListItem.Title>
                                 <ListItem.Subtitle style={styles.subTitle}>
