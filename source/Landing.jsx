@@ -1,19 +1,58 @@
 import React from "react";
 import API from "./subcomponents/API";
-import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
-import { Text, Input, Button } from "react-native-elements";
+import {
+    View,
+    StyleSheet,
+    Image,
+    Button,
+    TextInput,
+    ActivityIndicator,
+} from "react-native";
+import { Text } from "react-native-elements";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import * as Constants from "./subcomponents/Constants";
 class Landing extends React.Component {
     state = {
         name: "",
         validName: false,
         message: "",
         color: "red",
+        waiting: false,
+    };
+
+    ComponenDidMount = async () => {
+        this.setState({ waiting: true });
+
+        try {
+            let playerName = await AsyncStorage.getItem("playerName");
+
+            var options = {
+                name: playerName,
+            };
+
+            let response = await API.post("/login", options);
+
+            if (response.data.status.code === 200) {
+                this.props.navigation.navigate("Categories", {
+                    userID: response.data.data.userId,
+                    sessionKey: response.data.data.sessionKey,
+                });
+            } else {
+                this.setState({
+                    validName: false,
+                    message: response.data.status.msg,
+                    color: "red",
+                    waiting: false,
+                });
+            }
+        } catch (error) {
+            log.Println(error);
+        }
     };
 
     navigateToCategories = async () => {
+        this.setState({ waiting: true });
+
         var options = {
             name: this.state.name,
         };
@@ -25,15 +64,15 @@ class Landing extends React.Component {
 
             this.props.navigation.navigate("Categories", {
                 userID: response.data.data.userId,
-                sessionKey: response.data.data.sessionKey,
+                sessionKey: response.data.data.sessionToken,
             });
         } else {
             this.setState({
                 validName: false,
                 message: response.data.status.msg,
                 color: "red",
+                waiting: false,
             });
-            console.log(response.data);
         }
     };
 
@@ -45,19 +84,22 @@ class Landing extends React.Component {
                     source={require("../assets/images/igq.png")}
                 />
 
-                {/* <Divider style={styles.dividerStyle} /> */}
-                <Text style={styles.info}>Sign in to continue</Text>
+                <TextInput
+                    onChangeText={(value) => this.setState({ name: value })}
+                    // selectionColor="#428AF8"
+                    style={styles.inputName}
+                    placeholder="Pick a player name"
+                />
 
-                <View style={styles.inputBox}>
-                    <Input
-                        placeholder="Pick a name"
-                        inputStyle={{ textAlign: "center" }}
-                        onChangeText={(value) => this.setState({ name: value })}
-                    />
-                </View>
+                <TextInput
+                    onChangeText={(value) => this.setState({ email: value })}
+                    // selectionColor="#428AF8"
+                    style={styles.inputEmail}
+                    placeholder="Enter your email"
+                />
 
-                <Text style={{ color: this.state.color }}>
-                    {this.state.message}
+                <Text style={styles.info}>
+                    We do not share your email or send any promotional mails
                 </Text>
 
                 <Button
@@ -66,6 +108,21 @@ class Landing extends React.Component {
                     type="solid"
                     onPress={() => this.navigateToCategories()}
                 />
+
+                {this.state.waiting === true ? (
+                    <ActivityIndicator style={styles.activityindicator} />
+                ) : (
+                    <View />
+                )}
+                <Text
+                    style={{
+                        color: this.state.color,
+                        alignSelf: "center",
+                        marginBottom: 30,
+                    }}
+                >
+                    {this.state.message}
+                </Text>
             </View>
         );
     }
@@ -76,6 +133,9 @@ export default Landing;
 const styles = StyleSheet.create({
     container: {
         flexDirection: "column",
+        padding: 40,
+        flex: 1,
+        flexShrink: 1,
     },
 
     title: {
@@ -89,23 +149,50 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         textAlign: "center",
         width: 300,
+        marginTop: 20,
+        marginBottom: 30,
+    },
+
+    inputName: {
+        fontSize: 14,
+        lineHeight: 14, // <- line height should be corresponding to your font size
+        borderWidth: 1.0,
+        borderColor: "dodgerblue",
+        height: 40,
+        marginBottom: 10,
         marginTop: 30,
+        textAlign: "center",
+    },
+
+    inputEmail: {
+        fontSize: 14,
+        lineHeight: 14, // <- line height should be corresponding to your font size
+        borderWidth: 1.0,
+        borderColor: "dodgerblue",
+        height: 40,
+        marginBottom: 10,
+        textAlign: "center",
+    },
+
+    activityindicator: {
+        marginTop: 10,
     },
 
     info: {
-        marginTop: 70,
         alignSelf: "center",
-        fontSize: 18,
+        fontSize: 11,
+        marginBottom: 20,
+        color: "blue",
     },
 
     continueBtn: {
-        marginTop: 20,
+        marginTop: 50,
     },
 
     logo: {
         height: 250,
         width: 350,
         alignSelf: "center",
-        marginTop: 100,
+        marginTop: 30,
     },
 });
