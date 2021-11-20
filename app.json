@@ -10,9 +10,6 @@
       "package": "com.indiangeographyquiz",
       "googleServicesFile": "./google-services.json"
     },
-    "splash": {
-      "image": "./assets/images/igq.png"
-    },
     "description": ""
   },
   "name": "indian-geography-quiz"
