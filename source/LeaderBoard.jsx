@@ -2,18 +2,31 @@ import React from "react";
 import API from "./subcomponents/API";
 import Head from "./subcomponents/HeaderComponent";
 import { View, StyleSheet, Text } from "react-native";
-import { Avatar, ListItem, Card } from "react-native-elements";
-
-import * as Constants from "./subcomponents/Constants";
+import { ListItem, Card } from "react-native-elements";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 class LeaderBoard extends React.Component {
     state = {
         leaderboards: [],
         sessionKey: "",
         userID: 0,
+        categoryID: 0,
+        tmpScore: 0,
     };
 
     componentDidMount = async () => {
+        let sessionKey = await AsyncStorage.getItem("sessionKey");
+        let userID = await AsyncStorage.getItem("userID");
+        let categoryID = await AsyncStorage.getItem("categoryID");
+        let tmpScore = await AsyncStorage.getItem("score");
+
+        this.setState({
+            sessionKey,
+            userID,
+            categoryID,
+            tmpScore,
+        });
+
         try {
             const gmtDate = new Date().toLocaleString("en-US", {
                 timeZone: "Asia/Kolkata",
@@ -28,12 +41,10 @@ class LeaderBoard extends React.Component {
                 "-" +
                 todayDate.getDate();
 
-            const categoryID = this.props.route.params.categoryID;
-
             var options = {
-                UserID: this.props.route.params.userID,
+                UserID: parseInt(userID),
                 CategoryID: parseInt(categoryID),
-                SessionKey: this.props.route.params.sessionKey,
+                SessionKey: sessionKey,
                 QuizDate: formatTodayDate,
             };
 
@@ -42,8 +53,8 @@ class LeaderBoard extends React.Component {
             if (response.data.status.code === 200) {
                 this.setState({
                     leaderboards: response.data.data,
-                    sessionKey: this.props.route.params.sessionKey,
-                    userID: this.props.route.params.userID,
+                    sessionKey: sessionKey,
+                    userID: userID,
                 });
             }
         } catch (error) {
@@ -56,9 +67,7 @@ class LeaderBoard extends React.Component {
             <View>
                 <Head
                     navigation={this.props.navigation}
-                    newScore={-2}
-                    sessionKey={this.props.route.params.sessionKey}
-                    userID={this.props.route.params.userID}
+                    tmpScore={this.state.tmpScore}
                 />
                 <Card>
                     <Card.Title>Day's top scorers</Card.Title>

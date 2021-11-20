@@ -4,8 +4,8 @@ import Head from "./subcomponents/HeaderComponent";
 import { View, StyleSheet } from "react-native";
 import { Column as Col, Row } from "react-native-flexbox-grid";
 
-import * as Constants from "./subcomponents/Constants";
 import { Button, Chip, Card, Divider } from "react-native-elements";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 class QuizScreen extends React.Component {
     state = {
@@ -24,14 +24,29 @@ class QuizScreen extends React.Component {
         showMessage: false,
 
         updatedScore: 0,
+        tmpScore: 0,
         sessionKey: "",
         userID: 0,
         categoryID: 0,
+        quizzes: {},
     };
 
     componentDidMount = async () => {
+        let sessionKey = await AsyncStorage.getItem("sessionKey");
+        let userID = await AsyncStorage.getItem("userID");
+        let categoryID = await AsyncStorage.getItem("categoryID");
+        let quizzes = await AsyncStorage.getItem("quizzes");
+        let tmpScore = await AsyncStorage.getItem("score");
+
+        this.setState({
+            sessionKey,
+            userID,
+            categoryID,
+            quizzes,
+            tmpScore,
+        });
+
         try {
-            const quizzes = this.props.route.params.quizzes;
             var currentQuiz = JSON.parse(quizzes);
 
             var counter = this.state.counter;
@@ -48,9 +63,9 @@ class QuizScreen extends React.Component {
                 currentOptions: currentQuiz[counter].Options,
                 currentImage: currentQuiz[counter].ImageLink,
                 totalQuizzes: currentQuiz.length,
-                sessionKey: this.props.route.params.sessionKey,
-                userID: this.props.route.params.userID,
-                categoryID: this.props.route.params.categoryID,
+                sessionKey: sessionKey,
+                userID: userID,
+                categoryID: categoryID,
             });
         } catch (e) {
             console.log("Error Quiz", e);
@@ -58,11 +73,7 @@ class QuizScreen extends React.Component {
     };
 
     navigateToSubCategories = () => {
-        this.props.navigation.navigate("SubCategories", {
-            categoryID: this.state.categoryID,
-            sessionKey: this.state.sessionKey,
-            userID: this.state.userID,
-        });
+        this.props.navigation.navigate("SubCategories");
     };
 
     skipQuiz = () => {
@@ -100,17 +111,19 @@ class QuizScreen extends React.Component {
                 showSkip: false,
             });
 
-            const categoryID = this.props.route.params.categoryID;
+            const categoryID = this.state.categoryID;
 
             var options = {
                 SessionKey: this.state.sessionKey,
                 CategoryID: parseInt(categoryID),
-                UserID: this.state.userID,
+                UserID: parseInt(this.state.userID),
             };
 
             await API.post("/updatescore", options);
 
-            var updatedScore = this.state.updatedScore + 1;
+            let score = await AsyncStorage.getItem("score");
+            let updatedScore = parseInt(score) + 1;
+            await AsyncStorage.setItem("score", updatedScore.toString());
             this.setState({ updatedScore });
         } else {
             this.setState({
@@ -191,9 +204,7 @@ class QuizScreen extends React.Component {
             <View>
                 <Head
                     navigation={this.props.navigation}
-                    newScore={this.state.updatedScore}
-                    sessionKey={this.props.route.params.sessionKey}
-                    userID={this.props.route.params.userID}
+                    tmpScore={this.state.updatedScore}
                 />
                 <Card>
                     <Card.Title>Identify the district</Card.Title>

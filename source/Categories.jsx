@@ -4,18 +4,29 @@ import Head from "./subcomponents/HeaderComponent";
 import { Card, Button, Icon, Text } from "react-native-elements";
 import { View, StyleSheet } from "react-native";
 
-import * as Constants from "./subcomponents/Constants";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 class Categories extends React.Component {
     state = {
         categories: [],
         sessionKey: "",
         userID: 0,
+        tmpScore: 0,
     };
 
     componentDidMount = async () => {
+        let sessionKey = await AsyncStorage.getItem("sessionKey");
+        let userID = await AsyncStorage.getItem("userID");
+        let tmpScore = await AsyncStorage.getItem("score");
+
+        this.setState({
+            sessionKey,
+            userID,
+            tmpScore,
+        });
+
         var options = {
-            SessionKey: this.props.route.params.sessionKey,
+            SessionKey: sessionKey,
         };
 
         try {
@@ -24,8 +35,8 @@ class Categories extends React.Component {
             if (response.data.status.code === 200) {
                 this.setState({
                     categories: response.data.data,
-                    sessionKey: this.props.route.params.sessionKey,
-                    userID: this.props.route.params.userID,
+                    sessionKey: sessionKey,
+                    userID: userID,
                 });
             } else {
                 console.log(response.data.status.msg);
@@ -35,15 +46,12 @@ class Categories extends React.Component {
         }
     };
 
-    componentDidUpdate = () => {};
+    componentDidUpdate = async () => {};
 
     navigateToSubCategories = async (categoryID) => {
         try {
-            this.props.navigation.navigate("SubCategories", {
-                categoryID: categoryID,
-                sessionKey: this.state.sessionKey,
-                userID: this.state.userID,
-            });
+            await AsyncStorage.setItem("categoryID", categoryID.toString());
+            this.props.navigation.navigate("SubCategories");
         } catch (e) {
             console.log("Error", e);
         }
@@ -54,9 +62,7 @@ class Categories extends React.Component {
             <View style={styles.container}>
                 <Head
                     navigation={this.props.navigation}
-                    newScore={-2}
-                    sessionKey={this.props.route.params.sessionKey}
-                    userID={this.props.route.params.userID}
+                    tmpScore={this.state.tmpScore}
                 />
                 {this.state.categories.map((value, key) => (
                     <Card key={key}>
