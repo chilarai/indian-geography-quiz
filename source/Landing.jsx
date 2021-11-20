@@ -14,6 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 class Landing extends React.Component {
     state = {
         name: "",
+        email: "",
         validName: false,
         message: "",
         color: "red",
@@ -25,9 +26,11 @@ class Landing extends React.Component {
 
         try {
             let playerName = await AsyncStorage.getItem("playerName");
+            let playerEmail = await AsyncStorage.getItem("playerEmail");
 
             var options = {
                 name: playerName,
+                email: playerEmail,
             };
 
             let response = await API.post("/login", options);
@@ -55,12 +58,14 @@ class Landing extends React.Component {
 
         var options = {
             name: this.state.name,
+            email: this.state.email,
         };
 
         let response = await API.post("/login", options);
 
         if (response.data.status.code === 200) {
             await AsyncStorage.setItem("playerName", this.state.name);
+            await AsyncStorage.setItem("playerEmail", this.state.email);
 
             this.props.navigation.navigate("Categories", {
                 userID: response.data.data.userId,
