@@ -16,6 +16,7 @@ class Landing extends React.Component {
         name: "",
         email: "",
         validName: false,
+        validEmail: false,
         message: "",
         color: "red",
         waiting: false,
@@ -33,18 +34,33 @@ class Landing extends React.Component {
                 email: playerEmail,
             };
 
-            let response = await API.post("/login", options);
+            if (this.state.validEmail === true) {
+                this.setState({ message: "" });
+                let response = await API.post("/login", options);
 
-            if (response.data.status.code === 200) {
-                this.props.navigation.navigate("Categories", {
-                    userID: response.data.data.userId,
-                    sessionKey: response.data.data.sessionKey,
-                });
+                if (response.data.status.code === 200) {
+                    await AsyncStorage.setItem(
+                        "sessionKey",
+                        response.data.data.sessionToken
+                    );
+                    await AsyncStorage.setItem(
+                        "userID",
+                        response.data.data.userId
+                    );
+
+                    this.props.navigation.navigate("Categories");
+                } else {
+                    this.setState({
+                        validName: false,
+                        validEmail: false,
+                        message: response.data.status.msg,
+                        color: "red",
+                        waiting: false,
+                    });
+                }
             } else {
                 this.setState({
-                    validName: false,
-                    message: response.data.status.msg,
-                    color: "red",
+                    message: "Invalid email format",
                     waiting: false,
                 });
             }
@@ -61,23 +77,44 @@ class Landing extends React.Component {
             email: this.state.email,
         };
 
-        let response = await API.post("/login", options);
+        if (this.state.validEmail === true) {
+            this.setState({ message: "" });
+            let response = await API.post("/login", options);
 
-        if (response.data.status.code === 200) {
-            await AsyncStorage.setItem("playerName", this.state.name);
-            await AsyncStorage.setItem("playerEmail", this.state.email);
+            if (response.data.status.code === 200) {
+                await AsyncStorage.setItem(
+                    "sessionKey",
+                    response.data.data.sessionToken
+                );
+                await AsyncStorage.setItem(
+                    "userID",
+                    response.data.data.userId.toString()
+                );
+                await AsyncStorage.setItem("playerName", this.state.name);
+                await AsyncStorage.setItem("playerEmail", this.state.email);
 
-            this.props.navigation.navigate("Categories", {
-                userID: response.data.data.userId,
-                sessionKey: response.data.data.sessionToken,
-            });
+                this.props.navigation.navigate("Categories");
+            } else {
+                this.setState({
+                    validName: false,
+                    validEmail: false,
+                    message: response.data.status.msg,
+                    color: "red",
+                    waiting: false,
+                });
+            }
         } else {
-            this.setState({
-                validName: false,
-                message: response.data.status.msg,
-                color: "red",
-                waiting: false,
-            });
+            this.setState({ message: "Invalid email format", waiting: false });
+        }
+    };
+
+    validate = (text) => {
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+        if (reg.test(text) === false) {
+            this.setState({ email: text, validEmail: false });
+            return false;
+        } else {
+            this.setState({ email: text, validEmail: true });
         }
     };
 
@@ -97,7 +134,7 @@ class Landing extends React.Component {
                 />
 
                 <TextInput
-                    onChangeText={(value) => this.setState({ email: value })}
+                    onChangeText={(text) => this.validate(text)}
                     // selectionColor="#428AF8"
                     style={styles.inputEmail}
                     placeholder="Enter your email"

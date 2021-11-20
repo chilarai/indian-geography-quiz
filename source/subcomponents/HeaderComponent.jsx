@@ -1,19 +1,22 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
 import { View } from "react-native";
 import { Header, Icon, Badge } from "react-native-elements";
 
 import API from "./API";
-import * as Constants from "./Constants";
 
 class Head extends React.Component {
     state = {
         score: 0,
-        tmpScore: -1,
         sessionKey: "",
         userID: 0,
+        tmpScore: 0,
     };
 
     componentDidMount = async () => {
+        let sessionKey = await AsyncStorage.getItem("sessionKey");
+        let userID = await AsyncStorage.getItem("userID");
+
         const gmtDate = new Date().toLocaleString("en-US", {
             timeZone: "Asia/Kolkata",
         });
@@ -28,18 +31,23 @@ class Head extends React.Component {
             todayDate.getDate();
 
         var options = {
-            UserID: this.props.userID,
-            SessionKey: this.props.sessionKey,
+            UserID: parseInt(userID),
+            SessionKey: sessionKey,
             QuizDate: formatTodayDate,
         };
 
         const response = await API.post("/currentscore", options);
 
         if (response.data.status.code === 200) {
+            await AsyncStorage.setItem(
+                "score",
+                response.data.data.Score.toString()
+            );
+
             this.setState({
                 score: response.data.data.Score,
-                sessionKey: this.props.sessionKey,
-                userID: this.props.userID,
+                sessionKey: sessionKey,
+                userID: userID,
             });
         } else {
             console.log(response.data);
@@ -47,32 +55,18 @@ class Head extends React.Component {
     };
 
     componentDidUpdate = async (props) => {
-        if (
-            this.state.tmpScore !== props.newScore &&
-            typeof props.newScore !== "undefined"
-        ) {
-            if (props.newScore > 0) {
-                var score = this.state.score + 1;
-                this.setState({ score, tmpScore: props.newScore });
-            } else {
-                // var score = await AsyncStorage.getItem("@score");
-                this.setState({ tmpScore: props.newScore });
-            }
+        if (props.tmpScore !== this.state.tmpScore) {
+            let score = await AsyncStorage.getItem("score");
+            this.setState({ score: parseInt(score), tmpScore: props.tmpScore });
         }
     };
 
     navigateToLeaderBoards = () => {
-        this.props.navigation.navigate("LeaderBoard", {
-            sessionKey: this.state.sessionKey,
-            userID: this.state.userID,
-        });
+        this.props.navigation.navigate("LeaderBoard");
     };
 
     navigateToCategories = () => {
-        this.props.navigation.navigate("Categories", {
-            sessionKey: this.state.sessionKey,
-            userID: this.state.userID,
-        });
+        this.props.navigation.navigate("Categories");
     };
 
     render() {
