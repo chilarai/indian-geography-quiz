@@ -7,6 +7,7 @@ import { Column as Col, Row } from "react-native-flexbox-grid";
 import { Button, Chip, Card, Divider } from "react-native-elements";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import * as Constants from "./subcomponents/Constants";
 class QuizScreen extends React.Component {
     state = {
         counter: 0,
@@ -29,6 +30,7 @@ class QuizScreen extends React.Component {
         userID: 0,
         categoryID: 0,
         quizzes: {},
+        title: "",
     };
 
     componentDidMount = async () => {
@@ -62,11 +64,14 @@ class QuizScreen extends React.Component {
                 currentRightAnswer: currentQuiz[counter].RightOption,
                 currentOptions: currentQuiz[counter].Options,
                 currentImage: currentQuiz[counter].ImageLink,
+                title: currentQuiz[counter].Title,
                 totalQuizzes: currentQuiz.length,
                 sessionKey: sessionKey,
                 userID: userID,
                 categoryID: categoryID,
             });
+
+            console.log(this.state, "STATES");
         } catch (e) {
             console.log("Error Quiz", e);
         }
@@ -94,6 +99,7 @@ class QuizScreen extends React.Component {
                 currentRightAnswer: currentQuiz[counter].RightOption,
                 currentOptions: currentQuiz[counter].Options,
                 currentImage: currentQuiz[counter].ImageLink,
+                title: currentQuiz[counter].Title,
                 counter: counter,
                 showMessage: false,
                 showSkip: true,
@@ -160,6 +166,7 @@ class QuizScreen extends React.Component {
                 currentRightAnswer: currentQuiz[counter].RightOption,
                 currentOptions: currentQuiz[counter].Options,
                 currentImage: currentQuiz[counter].ImageLink,
+                title: currentQuiz[counter].Title,
                 counter: counter,
                 showMessage: false,
                 showSkip: true,
@@ -181,6 +188,7 @@ class QuizScreen extends React.Component {
                                     this.state.currentOptions[i * 2]
                                 )
                             }
+                            titleStyle={{ fontSize: 12 }}
                             disabled={this.state.showMessage}
                         ></Button>
                     </Col>
@@ -193,6 +201,7 @@ class QuizScreen extends React.Component {
                                     this.state.currentOptions[i * 2 + 1]
                                 )
                             }
+                            titleStyle={{ fontSize: 12 }}
                             disabled={this.state.showMessage}
                         ></Button>
                     </Col>
@@ -207,10 +216,21 @@ class QuizScreen extends React.Component {
                     tmpScore={this.state.updatedScore}
                 />
                 <Card>
-                    <Card.Title>Identify the district</Card.Title>
+                    <Card.Title>
+                        {this.state.counter +
+                            1 +
+                            "/" +
+                            this.state.totalQuizzes +
+                            " " +
+                            this.state.title}
+                    </Card.Title>
                     <Card.Divider />
                     {/* <Image source={this.state.currentImage} /> */}
-                    <Card.Image source={require("../assets/test/1.png")} />
+                    <Card.Image
+                        source={{
+                            uri: Constants.BASE_URL + this.state.currentImage,
+                        }}
+                    />
 
                     <Divider style={styles.divider} />
                     <View style={styles.rows}>{rows}</View>

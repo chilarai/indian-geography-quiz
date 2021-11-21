@@ -10,6 +10,15 @@ import {
 } from "react-native";
 import { Text } from "react-native-elements";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+    enablePromise,
+    openDatabase,
+    SQLiteDatabase,
+} from "react-native-sqlite-storage";
+
+import * as Constants from "./subcomponents/Constants";
+
+enablePromise(true);
 
 class Landing extends React.Component {
     state = {
@@ -22,7 +31,7 @@ class Landing extends React.Component {
         waiting: false,
     };
 
-    ComponenDidMount = async () => {
+    componentDidMount = async () => {
         this.setState({ waiting: true });
 
         try {
@@ -34,33 +43,23 @@ class Landing extends React.Component {
                 email: playerEmail,
             };
 
-            if (this.state.validEmail === true) {
-                this.setState({ message: "" });
-                let response = await API.post("/login", options);
+            this.setState({ message: "" });
+            let response = await API.post("/login", options);
 
-                if (response.data.status.code === 200) {
-                    await AsyncStorage.setItem(
-                        "sessionKey",
-                        response.data.data.sessionToken
-                    );
-                    await AsyncStorage.setItem(
-                        "userID",
-                        response.data.data.userId
-                    );
+            if (response.data.status.code === 200) {
+                await AsyncStorage.setItem(
+                    "sessionKey",
+                    response.data.data.sessionToken
+                );
+                await AsyncStorage.setItem("userID", response.data.data.userId);
 
-                    this.props.navigation.navigate("Categories");
-                } else {
-                    this.setState({
-                        validName: false,
-                        validEmail: false,
-                        message: response.data.status.msg,
-                        color: "red",
-                        waiting: false,
-                    });
-                }
+                this.props.navigation.navigate("Categories");
             } else {
                 this.setState({
-                    message: "Invalid email format",
+                    validName: false,
+                    validEmail: false,
+                    message: response.data.status.msg,
+                    color: "red",
                     waiting: false,
                 });
             }

@@ -89,6 +89,9 @@ class SubCategories extends React.Component {
                                 <ListItem.Title>
                                     {value.SubCategoryName}
                                 </ListItem.Title>
+                                <ListItem.Subtitle>
+                                    {"Questions: " + value.QuizCount}
+                                </ListItem.Subtitle>
                             </ListItem.Content>
                         </ListItem>
                     ))}
