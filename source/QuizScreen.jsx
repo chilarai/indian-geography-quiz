@@ -70,8 +70,6 @@ class QuizScreen extends React.Component {
                 userID: userID,
                 categoryID: categoryID,
             });
-
-            console.log(this.state, "STATES");
         } catch (e) {
             console.log("Error Quiz", e);
         }

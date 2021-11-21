@@ -10,15 +10,6 @@ import {
 } from "react-native";
 import { Text } from "react-native-elements";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-    enablePromise,
-    openDatabase,
-    SQLiteDatabase,
-} from "react-native-sqlite-storage";
-
-import * as Constants from "./subcomponents/Constants";
-
-enablePromise(true);
 
 class Landing extends React.Component {
     state = {
@@ -37,31 +28,16 @@ class Landing extends React.Component {
         try {
             let playerName = await AsyncStorage.getItem("playerName");
             let playerEmail = await AsyncStorage.getItem("playerEmail");
+            let sessionKey = await AsyncStorage.getItem("sessionKey");
+            let userID = await AsyncStorage.getItem("userID");
 
-            var options = {
-                name: playerName,
-                email: playerEmail,
-            };
-
-            this.setState({ message: "" });
-            let response = await API.post("/login", options);
-
-            if (response.data.status.code === 200) {
-                await AsyncStorage.setItem(
-                    "sessionKey",
-                    response.data.data.sessionToken
-                );
-                await AsyncStorage.setItem("userID", response.data.data.userId);
-
+            if (
+                playerName != "" ||
+                playerEmail != "" ||
+                sessionKey != "" ||
+                userID != ""
+            ) {
                 this.props.navigation.navigate("Categories");
-            } else {
-                this.setState({
-                    validName: false,
-                    validEmail: false,
-                    message: response.data.status.msg,
-                    color: "red",
-                    waiting: false,
-                });
             }
         } catch (error) {
             log.Println(error);
