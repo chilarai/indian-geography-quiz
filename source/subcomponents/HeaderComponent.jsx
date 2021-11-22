@@ -1,9 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Header, Icon, Badge } from "react-native-elements";
 
 import API from "./API";
+import RightIcons from "./RightIcons";
 
 class Head extends React.Component {
     state = {
@@ -14,55 +15,57 @@ class Head extends React.Component {
     };
 
     componentDidMount = async () => {
-        let sessionKey = await AsyncStorage.getItem("sessionKey");
-        let userID = await AsyncStorage.getItem("userID");
+        try {
+            let sessionKey = await AsyncStorage.getItem("sessionKey");
+            let userID = await AsyncStorage.getItem("userID");
 
-        const gmtDate = new Date().toLocaleString("en-US", {
-            timeZone: "Asia/Kolkata",
-        });
+            const gmtDate = new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kolkata",
+            });
 
-        const todayDate = new Date(gmtDate);
+            const todayDate = new Date(gmtDate);
 
-        let formatTodayDate =
-            todayDate.getFullYear() +
-            "-" +
-            (todayDate.getMonth() + 1) +
-            "-" +
-            todayDate.getDate();
+            let formatTodayDate =
+                todayDate.getFullYear() +
+                "-" +
+                (todayDate.getMonth() + 1) +
+                "-" +
+                todayDate.getDate();
 
-        var options = {
-            UserID: parseInt(userID),
-            SessionKey: sessionKey,
-            QuizDate: formatTodayDate,
-        };
+            var options = {
+                UserID: parseInt(userID),
+                SessionKey: sessionKey,
+                QuizDate: formatTodayDate,
+            };
 
-        const response = await API.post("/currentscore", options);
+            const response = await API.post("/currentscore", options);
 
-        if (response.data.status.code === 200) {
-            await AsyncStorage.setItem(
-                "score",
-                response.data.data.Score.toString()
-            );
-
+            if (response.data.status.code === 200) {
+                await AsyncStorage.setItem(
+                    "score",
+                    response.data.data.Score.toString()
+                );
+            } else {
+                await AsyncStorage.setItem("score", "0");
+            }
             this.setState({
                 score: response.data.data.Score,
                 sessionKey: sessionKey,
                 userID: userID,
             });
-        } else {
-            console.log(response.data);
+        } catch (error) {
+            console.log(error);
         }
     };
 
     componentDidUpdate = async (props) => {
         if (props.tmpScore !== this.state.tmpScore) {
             let score = await AsyncStorage.getItem("score");
+            if (score === "" || score === null) {
+                score = 0;
+            }
             this.setState({ score: parseInt(score), tmpScore: props.tmpScore });
         }
-    };
-
-    navigateToLeaderBoards = () => {
-        this.props.navigation.navigate("LeaderBoard");
     };
 
     navigateToCategories = () => {
@@ -88,15 +91,14 @@ class Head extends React.Component {
                         />
                     }
                     centerComponent={
-                        <Badge value={this.state.score} status="warning" />
+                        <Badge
+                            value={this.state.score}
+                            status="warning"
+                            onPress={() => this.logout()}
+                        />
                     }
                     rightComponent={
-                        <Icon
-                            name="trophy"
-                            type="font-awesome"
-                            color="gold"
-                            onPress={() => this.navigateToLeaderBoards()}
-                        />
+                        <RightIcons navigation={this.props.navigation} />
                     }
                 />
             </View>
@@ -105,3 +107,9 @@ class Head extends React.Component {
 }
 
 export default Head;
+
+const styles = StyleSheet.create({
+    rightContainerStyle: {
+        width: 40,
+    },
+});

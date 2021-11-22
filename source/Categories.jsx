@@ -12,24 +12,27 @@ class Categories extends React.Component {
         sessionKey: "",
         userID: 0,
         tmpScore: 0,
+        playerName: "",
     };
 
     componentDidMount = async () => {
-        let sessionKey = await AsyncStorage.getItem("sessionKey");
-        let userID = await AsyncStorage.getItem("userID");
-        let tmpScore = await AsyncStorage.getItem("score");
-
-        this.setState({
-            sessionKey,
-            userID,
-            tmpScore,
-        });
-
-        var options = {
-            SessionKey: sessionKey,
-        };
-
         try {
+            let sessionKey = await AsyncStorage.getItem("sessionKey");
+            let userID = await AsyncStorage.getItem("userID");
+            let tmpScore = await AsyncStorage.getItem("score");
+            let playerName = await AsyncStorage.getItem("playerName");
+
+            this.setState({
+                sessionKey,
+                userID,
+                tmpScore,
+                playerName,
+            });
+
+            var options = {
+                SessionKey: sessionKey,
+            };
+
             const response = await API.post("/categories", options);
 
             if (response.data.status.code === 200) {
@@ -46,7 +49,7 @@ class Categories extends React.Component {
         }
     };
 
-    componentDidUpdate = async () => {};
+    // componentDidUpdate = async () => {};
 
     navigateToSubCategories = async (categoryID) => {
         try {
@@ -64,15 +67,16 @@ class Categories extends React.Component {
                     navigation={this.props.navigation}
                     tmpScore={this.state.tmpScore}
                 />
+
                 {this.state.categories.map((value, key) => (
                     <Card key={key}>
                         <Card.Title>{value.CategoryName}</Card.Title>
                         <Card.Divider />
-                        <Card.Image source={require("../assets/test/1.png")} />
-                        <Text style={{ marginBottom: 10 }}>
-                            {
-                                "India has 748 districts spread across 28 states and 8 union territories. Can you point them all?"
-                            }
+                        <Card.Image
+                            source={require("../assets/images/quiz.png")}
+                        />
+                        <Text style={styles.info}>
+                            {"Can you identify all the 28 Indian states ?"}
                         </Text>
                         <Button
                             buttonStyle={{
@@ -98,5 +102,10 @@ export default Categories;
 const styles = StyleSheet.create({
     container: {
         flexDirection: "column",
+    },
+
+    info: {
+        marginBottom: 10,
+        marginTop: 10,
     },
 });

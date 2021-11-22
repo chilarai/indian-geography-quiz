@@ -7,6 +7,8 @@ import {
     Button,
     TextInput,
     ActivityIndicator,
+    CheckBox,
+    Linking,
 } from "react-native";
 import { Text } from "react-native-elements";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -22,47 +24,21 @@ class Landing extends React.Component {
         waiting: false,
     };
 
-    ComponenDidMount = async () => {
-        this.setState({ waiting: true });
-
+    componentDidMount = async () => {
         try {
             let playerName = await AsyncStorage.getItem("playerName");
             let playerEmail = await AsyncStorage.getItem("playerEmail");
+            let sessionKey = await AsyncStorage.getItem("sessionKey");
+            let userID = await AsyncStorage.getItem("userID");
 
-            var options = {
-                name: playerName,
-                email: playerEmail,
-            };
-
-            if (this.state.validEmail === true) {
-                this.setState({ message: "" });
-                let response = await API.post("/login", options);
-
-                if (response.data.status.code === 200) {
-                    await AsyncStorage.setItem(
-                        "sessionKey",
-                        response.data.data.sessionToken
-                    );
-                    await AsyncStorage.setItem(
-                        "userID",
-                        response.data.data.userId
-                    );
-
-                    this.props.navigation.navigate("Categories");
-                } else {
-                    this.setState({
-                        validName: false,
-                        validEmail: false,
-                        message: response.data.status.msg,
-                        color: "red",
-                        waiting: false,
-                    });
-                }
+            if (
+                playerName === null ||
+                playerEmail === null ||
+                sessionKey === null ||
+                userID === null
+            ) {
             } else {
-                this.setState({
-                    message: "Invalid email format",
-                    waiting: false,
-                });
+                this.props.navigation.navigate("Categories");
             }
         } catch (error) {
             log.Println(error);
@@ -93,6 +69,7 @@ class Landing extends React.Component {
                 await AsyncStorage.setItem("playerName", this.state.name);
                 await AsyncStorage.setItem("playerEmail", this.state.email);
 
+                let x = await AsyncStorage.getItem("sessionKey");
                 this.props.navigation.navigate("Categories");
             } else {
                 this.setState({
@@ -143,6 +120,21 @@ class Landing extends React.Component {
                 <Text style={styles.info}>
                     We do not share your email or send any promotional mails
                 </Text>
+
+                <View style={styles.terms}>
+                    <CheckBox value={true} disabled={true} />
+                    <Text style={styles.termsText1}>I agree to</Text>
+                    <Text
+                        style={styles.termsText2}
+                        onPress={() =>
+                            Linking.openURL(
+                                "https://igq.wreken.com/info/privacy.html"
+                            )
+                        }
+                    >
+                        Terms and Conditions
+                    </Text>
+                </View>
 
                 <Button
                     style={styles.continueBtn}
@@ -236,5 +228,19 @@ const styles = StyleSheet.create({
         width: 350,
         alignSelf: "center",
         marginTop: 30,
+    },
+
+    terms: {
+        flexDirection: "row",
+        marginBottom: 10,
+    },
+
+    termsText1: {
+        marginLeft: 10,
+    },
+
+    termsText2: {
+        marginLeft: 5,
+        color: "dodgerblue",
     },
 });

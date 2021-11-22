@@ -1,8 +1,8 @@
 import React from "react";
 import API from "./subcomponents/API";
 import Head from "./subcomponents/HeaderComponent";
-import { View, StyleSheet, Text } from "react-native";
-import { ListItem, Card } from "react-native-elements";
+import { View, StyleSheet } from "react-native";
+import { ListItem, Card, Text } from "react-native-elements";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 class LeaderBoard extends React.Component {
@@ -72,19 +72,27 @@ class LeaderBoard extends React.Component {
                 <Card>
                     <Card.Title>Day's top scorers</Card.Title>
                     <Card.Divider />
-                    {this.state.leaderboards.map((value, key) => (
-                        <ListItem key={key} bottomDivider>
-                            <Text>
-                                {key + 1} {"."}
-                            </Text>
-                            <ListItem.Content>
-                                <ListItem.Title>{value.Name}</ListItem.Title>
-                                <ListItem.Subtitle style={styles.subTitle}>
-                                    {value.Score}
-                                </ListItem.Subtitle>
-                            </ListItem.Content>
-                        </ListItem>
-                    ))}
+                    {this.state.leaderboards !== null ? (
+                        <View>
+                            {this.state.leaderboards.map((value, key) => (
+                                <ListItem key={key} bottomDivider>
+                                    <ListItem.Content>
+                                        <ListItem.Title>
+                                            {key + 1} {"."}
+                                            {value.Name}
+                                        </ListItem.Title>
+                                        <ListItem.Subtitle
+                                            style={styles.subTitle}
+                                        >
+                                            {"Points: " + value.Score}
+                                        </ListItem.Subtitle>
+                                    </ListItem.Content>
+                                </ListItem>
+                            ))}
+                        </View>
+                    ) : (
+                        <View />
+                    )}
                 </Card>
             </View>
         );

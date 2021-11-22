@@ -2,7 +2,7 @@ import React from "react";
 import API from "./subcomponents/API";
 import Head from "./subcomponents/HeaderComponent";
 import { ListItem, Card } from "react-native-elements";
-import { View } from "react-native";
+import { View, Button } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 class SubCategories extends React.Component {
@@ -75,22 +75,22 @@ class SubCategories extends React.Component {
                     tmpScore={this.state.tmpScore}
                 />
                 <Card>
-                    <Card.Title>Select a state</Card.Title>
+                    <Card.Title>Select option</Card.Title>
                     <Card.Divider />
                     {this.state.subCategories.map((value, key) => (
-                        <ListItem
+                        <Button
                             key={key}
-                            bottomDivider
                             onPress={() =>
                                 this.navigateToQuiz(value.SubCategoryID)
                             }
-                        >
-                            <ListItem.Content>
-                                <ListItem.Title>
-                                    {value.SubCategoryName}
-                                </ListItem.Title>
-                            </ListItem.Content>
-                        </ListItem>
+                            title={
+                                value.SubCategoryName +
+                                " (" +
+                                value.QuizCount +
+                                " questions)"
+                            }
+                            color="#841584"
+                        />
                     ))}
                 </Card>
             </View>
