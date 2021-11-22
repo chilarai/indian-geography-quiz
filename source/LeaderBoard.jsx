@@ -72,19 +72,30 @@ class LeaderBoard extends React.Component {
                 <Card>
                     <Card.Title>Day's top scorers</Card.Title>
                     <Card.Divider />
-                    {this.state.leaderboards.map((value, key) => (
-                        <ListItem key={key} bottomDivider>
-                            <Text>
-                                {key + 1} {"."}
-                            </Text>
-                            <ListItem.Content>
-                                <ListItem.Title>{value.Name}</ListItem.Title>
-                                <ListItem.Subtitle style={styles.subTitle}>
-                                    {value.Score}
-                                </ListItem.Subtitle>
-                            </ListItem.Content>
-                        </ListItem>
-                    ))}
+                    {this.state.leaderboards !== null ? (
+                        <View>
+                            {this.state.leaderboards.map((value, key) => (
+                                <ListItem key={key} bottomDivider>
+                                    <Text>
+                                        {key + 1} {"."}
+                                    </Text>
+                                    <ListItem.Content>
+                                        <ListItem.Title>
+                                            {value.Name}
+                                        </ListItem.Title>
+                                        <ListItem.Subtitle
+                                            style={styles.subTitle}
+                                        >
+                                            {value.Score}
+                                        </ListItem.Subtitle>
+                                    </ListItem.Content>
+                                </ListItem>
+                            ))}
+                            : <View />
+                        </View>
+                    ) : (
+                        <View />
+                    )}
                 </Card>
             </View>
         );
