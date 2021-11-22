@@ -1,8 +1,8 @@
 import React from "react";
 import API from "./subcomponents/API";
 import Head from "./subcomponents/HeaderComponent";
-import { View, StyleSheet, Text } from "react-native";
-import { ListItem, Card } from "react-native-elements";
+import { View, StyleSheet } from "react-native";
+import { ListItem, Card, Text } from "react-native-elements";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 class LeaderBoard extends React.Component {
@@ -76,22 +76,19 @@ class LeaderBoard extends React.Component {
                         <View>
                             {this.state.leaderboards.map((value, key) => (
                                 <ListItem key={key} bottomDivider>
-                                    <Text>
-                                        {key + 1} {"."}
-                                    </Text>
                                     <ListItem.Content>
                                         <ListItem.Title>
+                                            {key + 1} {"."}
                                             {value.Name}
                                         </ListItem.Title>
                                         <ListItem.Subtitle
                                             style={styles.subTitle}
                                         >
-                                            {value.Score}
+                                            {"Points: " + value.Score}
                                         </ListItem.Subtitle>
                                     </ListItem.Content>
                                 </ListItem>
                             ))}
-                            : <View />
                         </View>
                     ) : (
                         <View />

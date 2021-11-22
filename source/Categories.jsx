@@ -12,25 +12,29 @@ class Categories extends React.Component {
         sessionKey: "",
         userID: 0,
         tmpScore: 0,
+        playerName: "",
     };
 
     componentDidMount = async () => {
-        let sessionKey = await AsyncStorage.getItem("sessionKey");
-        let userID = await AsyncStorage.getItem("userID");
-        let tmpScore = await AsyncStorage.getItem("score");
-
-        this.setState({
-            sessionKey,
-            userID,
-            tmpScore,
-        });
-
-        var options = {
-            SessionKey: sessionKey,
-        };
-
         try {
+            let sessionKey = await AsyncStorage.getItem("sessionKey");
+            let userID = await AsyncStorage.getItem("userID");
+            let tmpScore = await AsyncStorage.getItem("score");
+            let playerName = await AsyncStorage.getItem("playerName");
+
+            this.setState({
+                sessionKey,
+                userID,
+                tmpScore,
+                playerName,
+            });
+
+            var options = {
+                SessionKey: sessionKey,
+            };
+
             const response = await API.post("/categories", options);
+            console.log(options, userID, tmpScore);
 
             if (response.data.status.code === 200) {
                 this.setState({
@@ -46,7 +50,7 @@ class Categories extends React.Component {
         }
     };
 
-    componentDidUpdate = async () => {};
+    // componentDidUpdate = async () => {};
 
     navigateToSubCategories = async (categoryID) => {
         try {
@@ -64,6 +68,7 @@ class Categories extends React.Component {
                     navigation={this.props.navigation}
                     tmpScore={this.state.tmpScore}
                 />
+
                 {this.state.categories.map((value, key) => (
                     <Card key={key}>
                         <Card.Title>{value.CategoryName}</Card.Title>

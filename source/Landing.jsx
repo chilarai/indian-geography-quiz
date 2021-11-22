@@ -23,20 +23,20 @@ class Landing extends React.Component {
     };
 
     componentDidMount = async () => {
-        this.setState({ waiting: true });
-
         try {
             let playerName = await AsyncStorage.getItem("playerName");
             let playerEmail = await AsyncStorage.getItem("playerEmail");
             let sessionKey = await AsyncStorage.getItem("sessionKey");
             let userID = await AsyncStorage.getItem("userID");
 
+            console.log(playerName, playerEmail, sessionKey, userID);
             if (
-                playerName != "" ||
-                playerEmail != "" ||
-                sessionKey != "" ||
-                userID != ""
+                playerName === null ||
+                playerEmail === null ||
+                sessionKey === null ||
+                userID === null
             ) {
+            } else {
                 this.props.navigation.navigate("Categories");
             }
         } catch (error) {
@@ -68,6 +68,8 @@ class Landing extends React.Component {
                 await AsyncStorage.setItem("playerName", this.state.name);
                 await AsyncStorage.setItem("playerEmail", this.state.email);
 
+                let x = await AsyncStorage.getItem("sessionKey");
+                console.log("X", x);
                 this.props.navigation.navigate("Categories");
             } else {
                 this.setState({
