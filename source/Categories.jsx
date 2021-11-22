@@ -68,11 +68,11 @@ class Categories extends React.Component {
                     <Card key={key}>
                         <Card.Title>{value.CategoryName}</Card.Title>
                         <Card.Divider />
-                        <Card.Image source={require("../assets/test/1.png")} />
-                        <Text style={{ marginBottom: 10 }}>
-                            {
-                                "India has 748 districts spread across 28 states and 8 union territories. Can you point them all?"
-                            }
+                        <Card.Image
+                            source={require("../assets/images/quiz.png")}
+                        />
+                        <Text style={styles.info}>
+                            {"Can you identify all the 28 Indian states ?"}
                         </Text>
                         <Button
                             buttonStyle={{
@@ -98,5 +98,10 @@ export default Categories;
 const styles = StyleSheet.create({
     container: {
         flexDirection: "column",
+    },
+
+    info: {
+        marginBottom: 10,
+        marginTop: 10,
     },
 });
