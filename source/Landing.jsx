@@ -123,15 +123,16 @@ class Landing extends React.Component {
 
                 <View style={styles.terms}>
                     <CheckBox value={true} disabled={true} />
+                    <Text style={styles.termsText1}>I agree to</Text>
                     <Text
-                        style={styles.termsText}
+                        style={styles.termsText2}
                         onPress={() =>
                             Linking.openURL(
                                 "https://igq.wreken.com/info/privacy.html"
                             )
                         }
                     >
-                        I agree to Terms and Conditions
+                        Terms and Conditions
                     </Text>
                 </View>
 
@@ -234,7 +235,12 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
 
-    termsText: {
+    termsText1: {
         marginLeft: 10,
+    },
+
+    termsText2: {
+        marginLeft: 5,
+        color: "dodgerblue",
     },
 });
