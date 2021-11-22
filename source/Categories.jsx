@@ -34,7 +34,6 @@ class Categories extends React.Component {
             };
 
             const response = await API.post("/categories", options);
-            console.log(options, userID, tmpScore);
 
             if (response.data.status.code === 200) {
                 this.setState({

@@ -7,6 +7,8 @@ import {
     Button,
     TextInput,
     ActivityIndicator,
+    CheckBox,
+    Linking,
 } from "react-native";
 import { Text } from "react-native-elements";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -29,7 +31,6 @@ class Landing extends React.Component {
             let sessionKey = await AsyncStorage.getItem("sessionKey");
             let userID = await AsyncStorage.getItem("userID");
 
-            console.log(playerName, playerEmail, sessionKey, userID);
             if (
                 playerName === null ||
                 playerEmail === null ||
@@ -69,7 +70,6 @@ class Landing extends React.Component {
                 await AsyncStorage.setItem("playerEmail", this.state.email);
 
                 let x = await AsyncStorage.getItem("sessionKey");
-                console.log("X", x);
                 this.props.navigation.navigate("Categories");
             } else {
                 this.setState({
@@ -120,6 +120,20 @@ class Landing extends React.Component {
                 <Text style={styles.info}>
                     We do not share your email or send any promotional mails
                 </Text>
+
+                <View style={styles.terms}>
+                    <CheckBox value={true} disabled={true} />
+                    <Text
+                        style={styles.termsText}
+                        onPress={() =>
+                            Linking.openURL(
+                                "https://igq.wreken.com/info/privacy.html"
+                            )
+                        }
+                    >
+                        I agree to Terms and Conditions
+                    </Text>
+                </View>
 
                 <Button
                     style={styles.continueBtn}
@@ -213,5 +227,14 @@ const styles = StyleSheet.create({
         width: 350,
         alignSelf: "center",
         marginTop: 30,
+    },
+
+    terms: {
+        flexDirection: "row",
+        marginBottom: 10,
+    },
+
+    termsText: {
+        marginLeft: 10,
     },
 });
