@@ -120,7 +120,7 @@ class Landing extends React.Component {
                 <Text style={styles.info}>
                     We do not share your email or send any promotional mails
                 </Text>
-
+                {/* 
                 <View style={styles.terms}>
                     <CheckBox value={true} disabled={true} />
                     <Text style={styles.termsText1}>I agree to</Text>
@@ -134,7 +134,7 @@ class Landing extends React.Component {
                     >
                         Terms and Conditions
                     </Text>
-                </View>
+                </View> */}
 
                 <Button
                     style={styles.continueBtn}

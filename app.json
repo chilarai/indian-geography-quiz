@@ -1,16 +1,14 @@
 {
-  "expo": {
-    "name": "indian-geography-quiz",
-    "slug": "indian-geography-quiz",
-    "version": "1.0.0",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "android": {
-      "package": "com.indiangeographyquiz",
-      "googleServicesFile": "./google-services.json"
+    "expo": {
+        "name": "indian-geography-quiz",
+        "slug": "indian-geography-quiz",
+        "version": "1.1.0",
+        "assetBundlePatterns": ["**/*"],
+        "android": {
+            "package": "com.indiangeographyquiz",
+            "googleServicesFile": "./google-services.json"
+        },
+        "description": ""
     },
-    "description": ""
-  },
-  "name": "indian-geography-quiz"
+    "name": "indian-geography-quiz"
 }
