@@ -91,11 +91,7 @@ class Head extends React.Component {
                         />
                     }
                     centerComponent={
-                        <Badge
-                            value={this.state.score}
-                            status="warning"
-                            onPress={() => this.logout()}
-                        />
+                        <Badge value={this.state.score} status="warning" />
                     }
                     rightComponent={
                         <RightIcons navigation={this.props.navigation} />
